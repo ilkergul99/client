@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  client-app:
+    image: client  # Explicitly naming the image
+    build: .
+    container_name: client-container
+    volumes:
+      - ./documents:/usr/src/client/documents
+      - ./output:/usr/src/client/output
+      - ./results:/usr/src/client/results
+      - ./source:/usr/src/client/source
+    ports:
+      - "4000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
