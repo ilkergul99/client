@@ -187,4 +187,4 @@ python send_messages.py
 
 ### Conclusion
 
-The `send_messages.py` script is an essential tool in a system designed to leverage advanced natural language processing capabilities of language models for analyzing and responding to queries based on a rich dataset of documents. It supports extensive use cases from academic research to commercial data analysis, providing a robust interface for user interaction and automated processing.
+The `send_messages.py` script is an essential tool in a system designed to leverage advanced natural language processing capabilities of language models for analyzing and responding to queries based on a rich dataset of documents.
