@@ -2,7 +2,7 @@
 
 ## Overview of `convert.py`
 
-This script handles several tasks aimed at preparing textual data for a microservices architecture where documents are processed and stored in a VectorDB. The primary functionalities include:
+This script handles several tasks aimed at preparing textual data for a microservices architecture where documents are processed and stored in `qdrant`. The primary functionalities include:
 
 1. **Downloading EPUB Files**: The script downloads EPUB versions of specified books from Project Gutenberg. This is handled without images to minimize file size and processing complexity.
 
@@ -11,6 +11,23 @@ This script handles several tasks aimed at preparing textual data for a microser
 3. **Checking for Processed Texts**: It checks a specified directory for already processed texts to avoid redundant processing and informs the user of available processed texts.
 
 4. **Interactive User Input**: Through command-line input, the user can choose to process a specific book, reprocess books, or check which books have already been processed.
+
+### Running the Script
+#### Prerequisites
+Before running the script, ensure that you have all necessary Python libraries installed. The script depends on several external libraries, which are listed below. Ensure these are available in your Python environment or Docker container:
+
+- **requests**: For making HTTP requests to download files.
+- **ebooklib**: For handling EPUB files.
+- **BeautifulSoup**: For parsing HTML content within EPUB files.
+- **os**: For interacting with the file system.
+- **sys**: For accessing system-specific parameters and functions.
+- **warnings**: For controlling warning messages.
+
+If you're running the script locally and not in a Docker container, install the required libraries using pip:
+
+```bash
+pip install requests EbookLib beautifulsoup4
+```
 
 ### Detailed Function Descriptions
 
@@ -47,8 +64,3 @@ This script handles several tasks aimed at preparing textual data for a microser
 ### Use Cases
 - **VectorDB Preparation**: Prepares textual data for storage and analysis in a VectorDB, facilitating tasks such as document similarity analysis, full-text search, and content-based filtering.
 - **Research and Analysis**: Provides researchers and developers with cleaned and ready-to-use textual data for natural language processing tasks, machine learning models, and data analysis projects.
-
-### Conclusion
-This script is an integral part of a larger system designed to manage and analyze textual data efficiently. By automating the download, conversion, and preliminary checking of text data, it allows users to focus on higher-level analysis and application development tasks.
-
-This detailed guide should help users and developers understand the purpose and functionality of `convert.py`, ensuring they can utilize it effectively within their projects or contribute to its development.
