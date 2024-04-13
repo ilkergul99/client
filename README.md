@@ -64,3 +64,58 @@ pip install requests EbookLib beautifulsoup4
 ### Use Cases
 - **VectorDB Preparation**: Prepares textual data for storage and analysis in a VectorDB, facilitating tasks such as document similarity analysis, full-text search, and content-based filtering.
 - **Research and Analysis**: Provides researchers and developers with cleaned and ready-to-use textual data for natural language processing tasks, machine learning models, and data analysis projects.
+
+
+## Overview of `ingest_file.py`
+
+This Python script is part of a system that handles the ingestion of document files into a server. It includes functionalities for sending individual files or bulk uploading multiple files, with robust error handling and user interaction to manage file transfers effectively. 
+
+### Detailed Function Descriptions
+
+#### `send_file_to_server(file_path, url)`
+- **Purpose**: Sends a file to a specified server endpoint. It is designed to handle potentially large files by setting a long timeout.
+- **Process**:
+  - Opens the file in binary read mode.
+  - Constructs a multipart/form-data request to send the file as 'application/octet-stream', allowing for binary file uploads.
+  - Sends the request with a custom timeout set to 15 minutes to accommodate potentially large file sizes or slow network conditions.
+  - Handles various network-related errors like timeouts and general request failures, providing specific feedback for each type of error.
+
+#### `send_all_files(available_files, sent_books, api_url)`
+- **Purpose**: Manages the bulk sending of multiple files to the server. It tracks which files have been successfully sent to prevent re-sending.
+- **Process**:
+  - Iterates over a dictionary of available files that have not yet been sent.
+  - For each file, calls `send_file_to_server` and checks the response.
+  - Updates the set of sent books upon successful upload.
+  - Provides detailed error reporting and status updates directly to the user.
+
+#### `main()`
+- **Purpose**: Serves as the script's entry point, facilitating user interaction and managing the workflow of sending files.
+- **Process**:
+  - Continuously presents the user with options to send individual files, send all unsent files, or exit the program.
+  - Uses user input to drive the decision-making process, with checks to ensure valid choices are made.
+  - Handles each user choice by either sending files as requested or exiting the application.
+
+### How to Run the `ingest_file.py` Script
+
+1. **Ensure Server Availability**: Before running the script, make sure the server endpoint (`api_url`) is active and capable of receiving files.
+
+2. **Check Dependencies**: Ensure that Python and required libraries (`requests`) are installed in your environment. If using a Docker container, ensure it is configured with these dependencies.
+
+3. **Execute the Script**:
+   - Open a terminal or command prompt.
+   - Navigate to the script's directory.
+   - Run the script by entering 
+```bash
+python ingest_file.py
+```
+4. **Follow On-screen Prompts**:
+   - The script will interactively ask for inputs based on available files and desired actions.
+   - Respond to prompts to send files or manage the ingestion process.
+
+### Error Handling
+
+This script includes comprehensive error handling to address issues that may arise during file transfer, such as network errors, server problems, or file access issues. 
+
+### Conclusion
+
+`ingest_file.py` is a key component of a system designed to automate and manage the ingestion of text files into a server for storage or further processing. It ensures efficient handling of file transfers with user interaction to control the process.
