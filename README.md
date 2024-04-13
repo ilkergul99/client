@@ -29,6 +29,12 @@ If you're running the script locally and not in a Docker container, install the 
 pip install requests EbookLib beautifulsoup4
 ```
 
+Run the script by navigating to its directory and executing 
+
+```bash
+python convert.py
+``` 
+
 ### Detailed Function Descriptions
 
 #### `download_epub(book_id)`
