@@ -99,7 +99,7 @@ This Python script is part of a system that handles the ingestion of document fi
 
 1. **Ensure Server Availability**: Before running the script, make sure the server endpoint (`api_url`) is active and capable of receiving files.
 
-2. **Check Dependencies**: Ensure that Python and required libraries (`requests`) are installed in your environment. If using a Docker container, ensure it is configured with these dependencies.
+2. **Check Dependencies**: Ensure that Python and required libraries (`requests`) are installed in your environment. If using a Docker container, ensure it is configured with these dependencies and the container is working properly.
 
 3. **Execute the Script**:
    - Open a terminal or command prompt.
