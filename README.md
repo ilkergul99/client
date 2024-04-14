@@ -463,3 +463,76 @@ python -m unittest discover -s ./tests -p "test_*.py"
 - **Timeout Errors**: If tests involving network requests fail with timeout errors, check your network connection and ensure that the server endpoint used in the tests is available.
 
 By following these guidelines, you can effectively run and manage the automated tests for your script files, ensuring that all functionalities behave as expected under defined conditions.
+
+---
+
+## Step-by-Step Usage Instructions for the Client Application
+
+Follow these steps to properly set up and use the client application:
+
+### 1. Clone the Repository
+Clone the GitHub repository containing both the client and server applications.
+```bash
+git clone [URL to the GitHub repository]
+```
+
+### 2. Navigate to the Project Directory
+Change your directory to the cloned project folder.
+```bash
+cd [project-directory]
+```
+
+### 3. Verify Docker Desktop
+Ensure that Docker Desktop is running. If not, launch it from your applications folder to start Docker.
+
+### 4. Check and Create Network
+Before starting the containers, verify the presence of the necessary Docker network:
+```bash
+docker network ls
+```
+If `my-app-network` does not exist, create it by running:
+```bash
+docker network create my-app-network
+```
+
+### 5. Build and Run Containers
+Build and run the Docker containers using Docker Compose. This step compiles the environment and starts all the services defined in your `docker-compose.yml`:
+```bash
+docker-compose up -d --build
+```
+
+### 6. Access the Container
+Enter the Docker container where the client application is running:
+```bash
+docker exec -it client-container bash
+```
+
+### 7. Run Tests
+To run the tests, use the following command inside the Docker container:
+```bash
+python -m unittest discover -s ./tests -p "test_*.py"
+```
+
+### 8. Download Books
+To download the books from Project Gutenberg, execute the script provided:
+```bash
+python convert.py
+```
+This will fetch the books and convert them into text files stored in the designated volumes.
+
+### 9. Send Files to Server
+Ensure the server application is running. Then, to send the converted files to the server for ingestion, use:
+```bash
+python ingest_file.py
+```
+
+### 10. Generate Responses
+To interact with the server and receive generated text based on the ingested data, run:
+```bash
+python send_messages.py
+```
+This script will allow you to input questions and receive responses from the server manually or by using a csv file.
+
+## Final Notes
+Ensure all scripts are run within the Docker container unless specified otherwise, as the environment and dependencies are managed there. Check logs and outputs regularly for any errors or important messages from the applications.
+
