@@ -98,7 +98,7 @@ available_files = {
     'Madame Bovary': '../client/output/Madame Bovary.txt',
     'War and Peace': '../client/output/War and Peace.txt',
     "L'assomoir": '../client/output/L\'assomoir.txt',
-    "deneme": '../client/output/deneme.txt'
+    "testing": '../client/output/testing.txt'
 }
 
 sent_books = set()  # To keep track of books that have been sent
