@@ -68,7 +68,7 @@ def main():
                 book_name = input("Enter the book name to send for ingestion: ").strip()
                 if book_name in unsent_books:
                     file_to_send = unsent_books[book_name]
-                    api_url = 'http://localhost:8001/v1/ingest/file'  # Change to your API URL
+                    api_url = 'http://private-gpt:8080/v1/ingest/file'  # Change to your API URL
                     try:
                         response = send_file_to_server(file_to_send, api_url)
                         if response and response.status_code == 200:
@@ -87,7 +87,7 @@ def main():
 
         elif user_choice == '2':
             if unsent_books:
-                send_all_files(unsent_books, sent_books, 'http://localhost:8001/v1/ingest/file')
+                send_all_files(unsent_books, sent_books, 'http://private-gpt:8080/v1/ingest/file')
             else:
                 print("No unsent files to send.")
         else:

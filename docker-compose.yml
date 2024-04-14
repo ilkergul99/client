@@ -9,7 +9,12 @@ services:
       - ./output:/usr/src/client/output
       - ./results:/usr/src/client/results
       - ./source:/usr/src/client/source
+    networks:
+      - my-app-network
     ports:
       - "4000:8000"
     environment:
       - PYTHONUNBUFFERED=1
+networks:
+  my-app-network:
+    external: true

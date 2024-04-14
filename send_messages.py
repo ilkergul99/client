@@ -16,7 +16,7 @@ def send_prompt_to_chat_api(url, message, use_context=True, include_sources=True
     }
 
     try:
-        response = requests.post(url, headers=headers, json=body, timeout=100)  # Set a timeout for the request
+        response = requests.post(url, headers=headers, json=body, timeout=180)  # Set a timeout for the request
         response.raise_for_status()  # Raise an exception for HTTP error responses
         return response
     except requests.exceptions.HTTPError as e:
@@ -66,7 +66,7 @@ def process_questions_from_csv(file_path, api_url):
     for _, row in questions_df.iterrows():
         question = row['Question']
         response, question = handle_question(api_url, question)
-        responses.append({'Reply': response, 'Question': question})
+        responses.append({'Reply': response, 'Reference': question})
 
     # Convert list of dictionaries to DataFrame
     responses_df = pd.DataFrame(responses)
@@ -99,54 +99,62 @@ def handle_question(api_url, question):
     if response is not None and response.status_code == 200:
         try:
             response_data = response.json()
+            
             server_response = response_data['choices'][0]['message']['content'] if response_data.get('choices') else 'No response data found.'
+            try:
+                reference = (response_data['choices'][0]['sources'][0]['document']
+                            ['doc_metadata']['window'])
+            except (IndexError, KeyError, TypeError):
+                reference = 'No reference data found.'
             print("Received response from server.")
-            return server_response, question
+            return server_response, reference
         except KeyError as e:
             # Handle missing keys in JSON response
             error_message = f"Missing data in response: {e}"
             print(error_message)
-            return error_message, question
+            return error_message, "No reference data found"
         except json.JSONDecodeError as e:
             # Handle JSON decode error if response is not in JSON format
             error_message = f"JSON decoding failed: {e}"
             print(error_message)
-            return error_message, question
+            return error_message, "No reference data found"
     elif response is not None:
         # Handle HTTP errors that were not caught by send_prompt_to_chat_api
         error_message = f"HTTP Error {response.status_code}: {response.text}"
         print("Failed to get response from server.")
-        return error_message, question
+        return error_message, "No response from server"
     else:
         # Handle cases where the response is None (network errors or timeouts handled in send_prompt_to_chat_api)
         error_message = "Server did not respond or network error occurred."
         print(error_message)
-        return error_message, question
+        return error_message, "Network error occurred"
 
 
 def user_input_mode(api_url):
-    responses_df = pd.DataFrame(columns=['Reply', 'Question'])
-    
+    responses_df = pd.DataFrame(columns=['Reply', 'Reference'])
+
     while True:
         user_input = input("Enter your message (type 'exit' to quit): ").strip()
-        
+
         if user_input.lower() == 'exit':
             print("Exiting chat session.")
             if not responses_df.empty:
                 save_responses(responses_df, 'responses_from_user_input.csv')
             break
-        
+
         response, question = handle_question(api_url, user_input)
-        
+
         if response:
-            responses_df = responses_df.append({'Reply': response, 'Question': question}, ignore_index=True)
+            # Note the use of the loc indexer to add a new row to the DataFrame
+            # This way, we're updating the DataFrame in place and avoiding the issue entirely.
+            responses_df.loc[len(responses_df)] = {'Reply': response, 'Reference': question}
         else:
             print("Failed to get a valid response from the server, please try again.")
 
 
 def save_responses(responses_df, filename):
     # Define the full path for the results directory
-    results_dir = '../client/results'
+    results_dir = './results'
     
     # Ensure the results directory exists
     if not os.path.exists(results_dir):
@@ -187,7 +195,7 @@ def list_csv_files(directory='./source'):  # Ensure the path is set to your sour
 
 
 def main():
-    api_url = 'http://localhost:8001/v1/chat/completions'  # Update the API URL if different
+    api_url = 'http://host.docker.internal:8001/v1/chat/completions'  # Update the API URL if different
     attempts = 0
     max_attempts = 5
 
