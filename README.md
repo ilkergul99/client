@@ -1,4 +1,117 @@
-# Client
+# Client App
+
+## Directory Breakdown
+
+```plaintext
+Client/
+│
+├── documents/                  # Contains the original EPUB files of the books.
+│   ├── 2413.epub               # EPUB file for 'Madame Bovary'.
+│   ├── 2600.epub               # EPUB file for 'War and Peace'.
+│   └── 8600.epub               # EPUB file for 'L'assomoir'.
+│
+├── output/                     # Stores the converted text files from EPUBs.
+│   ├── deneme.txt              # Sample output text file.
+│   ├── L'assomoir.txt          # Converted text for 'L'assomoir'.
+│   ├── Madame Bovary.txt       # Converted text for 'Madame Bovary'.
+│   └── War and Peace.txt       # Converted text for 'War and Peace'.
+│
+├── results/                    # Location for any results or outputs from scripts.
+│   └── responses_from_user_input.csv # CSV file with responses from user input.
+│
+├── source/                     # Directory for source CSV files to be used in testing or as input.
+│   └── privategpt_test.csv     # CSV file containing test cases or data for processing.
+│
+├── tests/                      # Contains unit and functional tests for the scripts.
+│   ├── test_convert.py         # Test script for `convert.py`.
+│   └── test_ingest.py          # Test script for `ingest_file.py`.
+│
+├── convert.py                  # Script to convert EPUB files to text.
+├── docker-compose.yml          # Docker Compose configuration file.
+├── Dockerfile                  # Definitions for building the Docker image.
+├── ingest_file.py              # Script to ingest files into the system.
+├── requirements.txt            # Lists the Python dependencies for the project.
+└── send_messages.py            # Script for sending messages to the server.
+```
+
+- `documents/`: Contains the original EPUB files of the books.
+- `output/`: Stores the converted text files from EPUBs.
+- `results/`: Location for any results or outputs from scripts, like CSV files from user input.
+- `source/`: Directory for source CSV files to be used in testing or as input.
+- `tests/`: Contains unit and functional tests for the scripts.
+- `convert.py`: Script to convert EPUB files to text.
+- `ingest_file.py`: Script to ingest files into the system for processing.
+- `send_messages.py`: Script for sending messages to the server.
+- `Dockerfile`: Definitions for the Docker container.
+- `docker-compose.yml`: Configuration for Docker compose to set up and run the Docker environment.
+- `requirements.txt`: Lists the Python dependencies for the project.
+
+  
+## Using Docker for Development and Testing
+
+This project is configured to use Docker, which simplifies the setup process and ensures that the environment is consistent, regardless of the host system. Below are detailed instructions on how to use Docker to build and run the application.
+
+### Prerequisites
+
+- **Docker Installed**: Ensure Docker and Docker Compose are installed on your system. If not, download and install them from [Docker's official site](https://www.docker.com/get-started).
+
+### Project Structure
+
+Ensure your project directory is structured appropriately, with the Dockerfile and docker-compose.yml at the root. The project should also include directories for `documents`, `output`, `results`, and `source`, which are mapped to corresponding directories inside the container.
+
+### Docker Configuration
+
+- **Dockerfile**: Configures the Python environment, installs necessary libraries, and sets up the working directory inside the container.
+- **docker-compose.yml**: Defines services, configuration for the `client-app` including volume mapping for persistent data storage and port forwarding.
+
+### Building the Docker Image
+
+Before running the application, the Docker image must be built. This can be done automatically with Docker Compose:
+
+```bash
+docker-compose build
+```
+
+This command will read the `docker-compose.yml` and `Dockerfile`, build the Docker image named `client`, and prepare it for running.
+
+### Running the Docker Container
+
+Once the image is built, you can start the container:
+
+```bash
+docker-compose up -d
+```
+
+This command starts the container in detached mode, meaning it runs in the background. Here are the key components configured in `docker-compose.yml`:
+
+- **Volumes**: The host directories (`documents`, `output`, `results`, `source`) are mounted to the container, allowing for persistent data storage and easy access to files on your host machine.
+- **Ports**: The container port 8000 is mapped to port 4000 on your host, allowing you to access any services running on port 8000 inside the container by visiting `localhost:4000` on your host machine.
+- **Environment Variables**: `PYTHONUNBUFFERED` set to `1` ensures that the Python output is displayed in the command line without being buffered.
+
+### Accessing the Container
+
+To access the running container for interactive commands, use:
+
+```bash
+docker exec -it client-container bash
+```
+
+This command provides a bash shell inside the container, allowing you to execute commands directly in the container environment.
+
+### Stopping the Container
+
+To stop the running container, you can use:
+
+```bash
+docker-compose down
+```
+
+This command stops and removes the containers, networks, and volumes specified in `docker-compose.yml`.
+
+### Managing Data and Logs
+
+Files generated by the application are stored in the `documents`, `output`, `results`, and `source` directories on your host machine, thanks to the volume mappings. This setup ensures that important data is not lost when the container is stopped or restarted.
+
 
 ## Overview of `convert.py`
 
@@ -188,3 +301,78 @@ python send_messages.py
 ### Conclusion
 
 The `send_messages.py` script is an essential tool in a system designed to leverage advanced natural language processing capabilities of language models for analyzing and responding to queries based on a rich dataset of documents.
+
+
+## Running Tests in Docker
+
+If you are using the Docker environment we've prepared, all dependencies are pre-installed in the Docker image, and you can run tests directly in the container without any additional setup. Here are the steps to execute tests inside the Docker container:
+
+### Prerequisites
+
+- **Docker**: Ensure Docker is installed on your system. If not, you can download and install Docker from [docker.com](https://www.docker.com/get-started).
+- **Project Docker Image**: The Docker image for the project should be built and ready. The image should contain the Python environment and all required dependencies pre-installed.
+
+### Starting the Docker Container
+
+1. **Start the Container**: If not already running, start your Docker container that has the project environment set up. Here’s a general command to start your Docker container:
+
+   ```bash
+   docker-compose up -d
+   ```
+
+   Ensure that your `docker-compose.yml` file is configured to mount the necessary directories that contain your project files, including test scripts and book files.
+
+### Executing Tests
+
+Once inside the Docker container, you can run the tests using the following steps:
+
+2. **Access the Container**: Enter the Docker container using the following command:
+
+   ```bash
+   docker exec -it client-container bash
+   ```
+
+   Replace `client-container` with the name of your Docker container.
+
+3. **Run the Tests**: Navigate to the directory containing your tests and execute them:
+
+   ```bash
+   python -m unittest discover -s ./tests -p "test_*.py"
+   ```
+
+## Running Tests in local
+
+This section provides detailed instructions on how to execute automated tests for the script files in this project. Before running the tests, ensure that all prerequisites are met to avoid any failures.
+
+
+### Prerequisites
+
+1. **Python Environment**: Ensure that Python 3.x is installed on your system. You can download it from [python.org](https://www.python.org/downloads/).
+
+2. **Dependencies**: Install all required Python packages. You can install them using the command:
+   ```bash
+   pip install requests beautifulsoup4 ebooklib
+   ```
+
+3. **Books and Their Converted Versions**: Make sure that the original books and their converted `.txt` versions are present in the specified directories (`../client/documents` for EPUB files and `../client/output` for TXT files). These files must be correctly named as expected by the tests (e.g., `Madame Bovary.epub` and `Madame Bovary.txt`).
+
+### Running the Tests
+
+To run the tests, navigate to the root directory of your project where the test files are located. Use the following command to execute all tests:
+
+```bash
+python -m unittest discover -s ./tests -p "test_*.py"
+```
+
+## Understanding Test Output
+
+- **Success**: If all tests pass, you will see a message indicating that all tests ran successfully with an `OK` status.
+- **Failures**: If one or more tests fail, the output will detail which tests failed and why. This can include assertion errors, missing files, or incorrect responses from functions.
+
+### Common Issues and Troubleshooting
+
+- **File Not Found**: Ensure that all required book files (both EPUB and TXT) are in the correct directories and named as expected by the tests.
+- **Dependency Errors**: Make sure all external libraries mentioned in the prerequisites are installed. Missing libraries will lead to import errors or function failures during testing.
+- **Timeout Errors**: If tests involving network requests fail with timeout errors, check your network connection and ensure that the server endpoint used in the tests is available.
+
+By following these guidelines, you can effectively run and manage the automated tests for your script files, ensuring that all functionalities behave as expected under defined conditions.
