@@ -46,7 +46,16 @@ Client/
 - `docker-compose.yml`: Configuration for Docker compose to set up and run the Docker environment.
 - `requirements.txt`: Lists the Python dependencies for the project.
 
-  
+## Watch the demonstation of Server and Client
+
+For a detailed demonstration and walkthrough of the project setup and functionality, please visit the following link:
+
+## [Watch the Demonstration by clicking here](https://drive.google.com/drive/folders/10BwsbG5IFRZG0lKB7-O1U93l5FqAr71n?usp=sharing)
+
+This link provides access to a Google Drive folder containing video that showcases how the application operates and interacts with the various components detailed in the setup. 
+
+---
+
 ## Using Docker for Development and Testing
 
 This project is configured to use Docker, which simplifies the setup process and ensures that the environment is consistent, regardless of the host system. Below are detailed instructions on how to use Docker to build and run the application.
