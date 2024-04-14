@@ -8,7 +8,7 @@ def send_file_to_server(file_path, url):
         files = {'file': (file_path, f, 'application/octet-stream')}
         try:
             # Setting a longer timeout, e.g., 900 seconds (15 minutes)
-            response = requests.post(url, files=files, timeout=900)
+            response = requests.post(url, files=files, timeout=1200)
             return response
         except requests.exceptions.Timeout:
             print("The request timed out. Please try again or verify the server's response time.")
