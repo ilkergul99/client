@@ -16,7 +16,7 @@ def send_prompt_to_chat_api(url, message, use_context=True, include_sources=True
     }
 
     try:
-        response = requests.post(url, headers=headers, json=body, timeout=480)  # Set a timeout for the request
+        response = requests.post(url, headers=headers, json=body, timeout=600)  # Set a timeout for the request
         response.raise_for_status()  # Raise an exception for HTTP error responses
         return response
     except requests.exceptions.HTTPError as e:
